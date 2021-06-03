@@ -34,6 +34,12 @@ public class VehiculeRestCtr {
 		return v;
 	}
 	
+	@RequestMapping(method=RequestMethod.PUT,value="/vehicle/{id}")
+	public Vehicle putvehicule(@RequestBody Vehicle v) {
+		vService.putVehicule(Integer.valueOf(id));
+		return v;
+	}
+	
 	@RequestMapping(method=RequestMethod.GET,value="/stopdisplay")
 	public void stopDisplay() {
 		vService.stopDisplay();

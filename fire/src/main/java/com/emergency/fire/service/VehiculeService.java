@@ -48,6 +48,10 @@ public class VehiculeService {
 		}
 	}
 	
+	public void putVehicule(Vehicle v) {
+		remotevehiculeService.updatesimulation(v);
+	}
+	
 	public void stopDisplay() {
 		//Call the user defined stop method of the runnable
 		this.dRunnable.stop();

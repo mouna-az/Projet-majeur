@@ -16,10 +16,13 @@ public class DisplayRunnable implements Runnable {
 	public void run() {
 		while (!this.isEnd) {
 			try {
-				Thread.sleep(10000);
-				for (Vehicle v : this.vrepo.findAll()) {
-					System.out.println(v.toString());
-				}
+				Thread.sleep(1000); //1 seconde
+				//appeler les fonctions update
+				
+				/*for (Vehicle v : this.vrepo.findAll()) {
+					//System.out.println(v.toString());
+					
+				}*/
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
