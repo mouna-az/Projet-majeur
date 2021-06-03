@@ -4,18 +4,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.project.model.dto.VehicleDto;
+import com.emergency.fire.service.EmergencyService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.model.dto.FireDto;
 
 
 @RestController
 public class EmergencyRestCtr {
+	
+	@Autowired 
+	EmergencyService emergencyService;
 
 	@RequestMapping("/allfire") 
 	public List<FireDto> getAllFire () {
@@ -23,7 +28,6 @@ public class EmergencyRestCtr {
 		FireDto[] list = restTemplate.getForObject("http://localhost:8081/fire",FireDto[].class);
 		System.out.println(list[0].toString()); 
 		List<FireDto> fireList = new ArrayList<FireDto>();
-		
 		if (list == null) {
 			return null;
 		}
@@ -33,8 +37,7 @@ public class EmergencyRestCtr {
 			}
 		}
 		System.out.println(fireList); 
-		return fireList;	
-	
+		return fireList;
 	
 	}
 	
@@ -56,6 +59,18 @@ public class EmergencyRestCtr {
 		return listVehicle;
 
 	}
+	
+  @RequestMapping("/affectation")
+    public int affectation () {
+        List<VehicleDto> vehiculelist = getAllVehicle ();
+        List<FireDto> fireList = getAllFire();
+        for(VehicleDto v:vehiculelist) {
+            for (FireDto f:fireList) {
+                emergencyService.teleportation(v, f);   
+            }   
+        }   
+        return 1;
+    }
 	
 }
 
