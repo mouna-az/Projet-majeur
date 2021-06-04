@@ -71,8 +71,8 @@ L.imageOverlay(imageUrl, imageBounds).addTo(mymap);
             </fieldset>
          </form>
 
-         
-         <form action="add()" method="post" id="add">
+         <div class = "feedback"></div>
+         <form Name="Add"  id ="search-form >
             <fieldset>
                <legend>Ajouter un vehicule</legend> <!-- Titre du fieldset --> 
             
@@ -99,7 +99,7 @@ L.imageOverlay(imageUrl, imageBounds).addTo(mymap);
             <input type="text" id="liquidQuantity" name="liquidQuantity" /></div>
             <div><label for="liquidConsumption">liquidConsumption:</label>
             <input type="text" id="liquidConsumption" name="liquidConsumption" /></div>
-             <input type="button" onclick="add()"  value="ajouter">
+             <input type="submit"  id = "sign" value="ajouter">
              <div><label for="id">id:</label>
                <input type="text" id="id" name="id" /></div>
                <input type="button" onclick="modifier()"  value="modifier">
@@ -108,10 +108,7 @@ L.imageOverlay(imageUrl, imageBounds).addTo(mymap);
             <input onclick= "deleteVehicle()"   type="button" value="supprimer">
              </fieldset>
              </form>
-            
+              <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+   				<script type="text/javascript" src="fire.js"></script>
              
-
-      
-<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="fire2.js"></script>   </body>      
- </html>
+		 </html>

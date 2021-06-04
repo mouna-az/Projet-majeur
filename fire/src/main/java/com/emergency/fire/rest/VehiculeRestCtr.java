@@ -25,6 +25,7 @@ public class VehiculeRestCtr {
 	@RequestMapping(method=RequestMethod.POST,value="/vehicle/add")
 	public void addvehicule(@RequestBody Vehicle v) {
 		vService.addVehicule(v);
+		System.out.print(" voiture crée");
 		
 	}
 	

@@ -82,13 +82,10 @@ public class RemotevehiculeService {
 		System.out.println(v.getId());
 	}
 
-	public void deleteVehicleSimulation(Integer integer) {
-		// TODO Auto-generated method stub
-		restTemplate= new RestTemplate();
-		//HttpEntity<VehicleDto> requestUpdate = new HttpEntity<>(v);
-		//ResponseEntity<Boolean> reponse = restTemplate.exchange("http://localhost:8081/vehicle/"+v.getId(), HttpMethod.DELETE, requestUpdate, Boolean.class);
-		//System.out.println(v.getId());
-		
+	public void deleteVehicleSimulation(VehicleDto vdelete) {
+		restTemplate= new RestTemplate( );
+		HttpEntity<VehicleDto> requestUpdate = new HttpEntity<>(vdelete);
+		ResponseEntity<Boolean> reponse = restTemplate.exchange("http://localhost:8081/vehicle/"+vdelete.getId(), HttpMethod.DELETE, requestUpdate, Boolean.class);		
 	}
 
 	

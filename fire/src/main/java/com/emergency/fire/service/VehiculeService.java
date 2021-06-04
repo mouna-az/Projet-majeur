@@ -57,12 +57,15 @@ public class VehiculeService {
 	}
 	
 	//supprimer un véhicule de notre base de données
-	public void deleteVehicule(Integer id) {
-		remotevehiculeService.deleteVehicleSimulation(id);
+	public Vehicle deleteVehicule(Integer id) {
 		Optional<Vehicle> vOpt =vRepository.findById(id);
+		VehicleDto vToDelete = convertToDto(vOpt.get());
+		remotevehiculeService.deleteVehicleSimulation(vToDelete);
 		if (vOpt.isPresent()) {
 			 vRepository.deleteById(id);
 		}
+		return null;
+		
 	}
 	
 	
