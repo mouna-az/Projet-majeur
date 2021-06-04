@@ -23,14 +23,11 @@ public class RemotevehiculeService {
 		System.out.println(v.getRemoteid());
 	}
 	
-	public void updatesimulation(Vehicle v) {
+	public void updatesimulation(VehicleDto v) {
 		restTemplate= new RestTemplate();
-		HttpEntity<Vehicle> requestUpdate = new HttpEntity<>(v);
-		ResponseEntity<Vehicle> reponse = restTemplate.exchange("http://localhost:8081/vehicle/"+v.getRemoteid(), HttpMethod.PUT, requestUpdate, Vehicle.class);
-		Vehicle v1 = reponse.getBody();
-		v.setRemoteid(v1.getId());
-		System.out.println(v1.getId());
-		System.out.println(v.getRemoteid());
+		HttpEntity<VehicleDto> requestUpdate = new HttpEntity<>(v);
+		ResponseEntity<Boolean> reponse = restTemplate.exchange("http://localhost:8081/vehicle/"+v.getId(), HttpMethod.PUT, requestUpdate, Boolean.class);
+		System.out.println(v.getId());
 	}
 	
 
