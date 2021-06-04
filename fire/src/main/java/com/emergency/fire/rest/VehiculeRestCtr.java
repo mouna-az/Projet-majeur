@@ -35,20 +35,19 @@ public class VehiculeRestCtr {
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT,value="/vehicle/{id}")
-	public Vehicle putvehicule(@RequestBody Vehicle v) {
-		//vService.putVehicule(Integer.valueOf(id));
-		return v;
+	public void putvehicule(@RequestBody Vehicle v,@PathVariable String id) {
+		vService.putVehicule(v,id);
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="/stopdisplay")
 	public void stopDisplay() {
 		vService.stopDisplay();
 	}
+	
+	@RequestMapping(method=RequestMethod.DELETE,value="/deleteVehicule/{id}")
+	public void deleteVehicule (@PathVariable String id ) {
+		vService.deleteVehicule(Integer.valueOf(id));
 
-	@RequestMapping("/deleteVehicule")
-	public void deleteVehicule (@RequestBody String id ) {
-		Vehicle v = 
-	  
 	}
 
 

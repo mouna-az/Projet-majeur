@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.emergency.fire.model.Vehicle;
 import com.emergency.fire.repository.VehiculeRepository;
+import com.project.model.dto.VehicleDto;
 
 @Service
 public class VehiculeService {
@@ -34,8 +35,8 @@ public class VehiculeService {
 	}
 	
 	public void addVehicule(Vehicle v) {
-		Vehicle createdVehicule= vRepository.save(v);
 		remotevehiculeService.addsimulation(v);
+		Vehicle createdVehicule= vRepository.save(v);
 		System.out.println(createdVehicule);
 	}
 	
@@ -48,9 +49,31 @@ public class VehiculeService {
 		}
 	}
 	
-	public void putVehicule(Vehicle v) {
-		remotevehiculeService.updatesimulation(v);
+	public void putVehicule(Vehicle v, String id) {
+		//Conversion to DTO type
+		VehicleDto vToSend = convertToDto(v);
+		//send dto to remote
+		remotevehiculeService.updatesimulation(vToSend);
 	}
+	
+	//supprimer un véhicule de notre base de données
+	public void deleteVehicule(Integer id) {
+		remotevehiculeService.deleteVehicleSimulation(id);
+		Optional<Vehicle> vOpt =vRepository.findById(id);
+		if (vOpt.isPresent()) {
+			 vRepository.deleteById(id);
+		}
+	}
+	
+	
+	//Conversion Vehicle to VehicleDto
+	public VehicleDto convertToDto(Vehicle v) {
+		VehicleDto vtosend = new VehicleDto(v.getRemoteid(),v.getLon() ,v.getLat(), v.getType() , v.getEfficiency(),
+				v.getLiquidType(), v.getLiquidQuantity(), v.getLiquidConsumption(), v.getFuel(),
+				v.getFuelConsumption(), v.getCrewMember(), v.getCrewMemberCapacity(), v.getFacilityRefID());
+		return vtosend;
+	}
+	
 	
 	public void stopDisplay() {
 		//Call the user defined stop method of the runnable
@@ -70,7 +93,8 @@ public class VehiculeService {
 		vRepository.save(v1);
 		vRepository.save(v2);
 	}
-	
+
+
 	
 	
 	

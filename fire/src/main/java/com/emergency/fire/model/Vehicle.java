@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import com.project.model.dto.LiquidType;
+import com.project.model.dto.VehicleDto;
 import com.project.model.dto.VehicleType;
 
 //https://www.amitph.com/spring-entity-to-dto/
@@ -167,7 +168,5 @@ public class Vehicle {
 		this.remoteid = remoteid;
 	}
 
-
-	
 
 }

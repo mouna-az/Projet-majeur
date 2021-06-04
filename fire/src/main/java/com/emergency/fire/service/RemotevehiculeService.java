@@ -75,13 +75,20 @@ public class RemotevehiculeService {
 
 	}
 	
-	public void updatesimulation(Vehicle v) {
+	public void updatesimulation(VehicleDto v) {
 		restTemplate= new RestTemplate();
-		HttpEntity<Vehicle> requestUpdate = new HttpEntity<>(v);
-		ResponseEntity<Vehicle> reponse = restTemplate.exchange("http://localhost:8081/vehicle/"+v.getRemoteid(), HttpMethod.PUT, requestUpdate, Vehicle.class);
-		Vehicle v1 = reponse.getBody();
-		v.setRemoteid(v1.getId());
+		HttpEntity<VehicleDto> requestUpdate = new HttpEntity<>(v);
+		ResponseEntity<Boolean> reponse = restTemplate.exchange("http://localhost:8081/vehicle/"+v.getId(), HttpMethod.PUT, requestUpdate, Boolean.class);
+		System.out.println(v.getId());
+	}
 
+	public void deleteVehicleSimulation(Integer integer) {
+		// TODO Auto-generated method stub
+		restTemplate= new RestTemplate();
+		//HttpEntity<VehicleDto> requestUpdate = new HttpEntity<>(v);
+		//ResponseEntity<Boolean> reponse = restTemplate.exchange("http://localhost:8081/vehicle/"+v.getId(), HttpMethod.DELETE, requestUpdate, Boolean.class);
+		//System.out.println(v.getId());
+		
 	}
 
 	
