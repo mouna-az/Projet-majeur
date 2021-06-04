@@ -1,0 +1,54 @@
+
+ #add {
+  /* Uniquement centrer le formulaire sur la page */
+  
+ float:left;
+ 
+  /* EncadrÃ© pour voir les limites du formulaire */
+  width: 33%;
+  padding: 1em;
+  border: 1px solid #CCC;
+ 
+  
+  background-color: rgb(171, 197, 201);
+}
+
+#filtreVeh{
+      /* Uniquement centrer le formulaire sur la page */
+  float:left;
+     
+      /* EncadrÃ© pour voir les limites du formulaire */
+      width: 33%;
+      padding: 1em;
+      border: 1px solid #CCC;
+     
+      background-color: rgb(171, 197, 201);
+
+}
+#delete{
+          /* Uniquement centrer le formulaire sur la page */
+          float:left;
+     
+         
+          /* EncadrÃ© pour voir les limites du formulaire */
+          width: 25vw;
+          padding: 1em;
+          border: 1px solid #CCC;
+        
+          background-color: rgb(171, 197, 201);
+}
+#firetype-select{ /* Uniquement centrer le formulaire sur la page */
+  
+  float:left;
+     
+ width: 28.4%;
+  /* EncadrÃ© pour voir les limites du formulaire */
+  padding: 1em;
+  border: 1px solid #CCC;
+ 
+background-color: rgb(236, 192, 71);
+
+}
+body{
+  margin:0;
+}
