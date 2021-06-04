@@ -36,7 +36,7 @@ public class VehiculeRestCtr {
 	
 	@RequestMapping(method=RequestMethod.PUT,value="/vehicle/{id}")
 	public Vehicle putvehicule(@RequestBody Vehicle v) {
-		vService.putVehicule(Integer.valueOf(id));
+		//vService.putVehicule(Integer.valueOf(id));
 		return v;
 	}
 	
