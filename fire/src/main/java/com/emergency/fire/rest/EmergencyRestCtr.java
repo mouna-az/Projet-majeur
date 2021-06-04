@@ -6,12 +6,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.project.model.dto.VehicleDto;
 import com.emergency.fire.service.EmergencyService;
+import com.emergency.fire.service.RemotevehiculeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.model.dto.FireDto;
 
@@ -21,49 +23,33 @@ public class EmergencyRestCtr {
 	
 	@Autowired 
 	EmergencyService emergencyService;
-
+	
+	@Autowired 
+	RemotevehiculeService remotevehiculeService;
+	
+	//regarder les feux du simulateur 
 	@RequestMapping("/allfire") 
-	public List<FireDto> getAllFire () {
+	public FireDto[] getFireJson () {
 		RestTemplate restTemplate = new RestTemplate();
-		FireDto[] list = restTemplate.getForObject("http://localhost:8081/fire",FireDto[].class);
-		System.out.println(list[0].toString()); 
-		List<FireDto> fireList = new ArrayList<FireDto>();
-		if (list == null) {
-			return null;
-		}
-		else {
-			for(FireDto f:list) {
-				fireList.add(f);
-			}
-		}
-		System.out.println(fireList); 
-		return fireList;
-	
+		FireDto[] listfire = remotevehiculeService.getAllFireJson () ;
+		System.out.println(listfire);
+		return listfire; 
 	}
 	
-	@RequestMapping("/allvehicle") 
-	public List<VehicleDto> getAllVehicle () {
-		
-		RestTemplate restTemplate = new RestTemplate();
-		VehicleDto[] list = restTemplate.getForObject("http://localhost:8081/vehicle",VehicleDto[].class);
-		List<VehicleDto> listVehicle = new ArrayList<VehicleDto>();
-		if (list == null) {
-			return null;
-		}
-		else {
-			for(VehicleDto f:list) {
-				listVehicle.add(f);
-			}
-		}
-		System.out.println("la liste:"+listVehicle);	
-		return listVehicle;
+	//regarder les véhicules présents dans le simulateur format json
+	@RequestMapping("/allvehicule")  
+	public VehicleDto[] getvehicule() {
+		VehicleDto[] listvehicule = remotevehiculeService.getAllVehicleJson () ;
+		System.out.println(listvehicule);
+		return listvehicule; 
+	}
 
-	}
 	
+	//affecter un vehicule sur un feu 
   @RequestMapping("/affectation")
     public int affectation () {
-        List<VehicleDto> vehiculelist = getAllVehicle ();
-        List<FireDto> fireList = getAllFire();
+        List<VehicleDto> vehiculelist = remotevehiculeService.getlallvehiculeList ();
+        List<FireDto> fireList = remotevehiculeService.getlallfireList();
         for(VehicleDto v:vehiculelist) {
             for (FireDto f:fireList) {
                 emergencyService.teleportation(v, f);   
@@ -72,6 +58,7 @@ public class EmergencyRestCtr {
         return 1;
     }
 	
+
 }
 
 

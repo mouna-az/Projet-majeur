@@ -44,7 +44,12 @@ public class VehiculeRestCtr {
 	public void stopDisplay() {
 		vService.stopDisplay();
 	}
-	
+
+	@RequestMapping("/deleteVehicule")
+	public void deleteVehicule (@RequestBody String id ) {
+		Vehicle v = 
+	  
+	}
 
 
 
