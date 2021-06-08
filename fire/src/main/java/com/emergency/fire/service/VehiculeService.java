@@ -60,8 +60,9 @@ public class VehiculeService {
 	public Vehicle deleteVehicule(Integer id) {
 		Optional<Vehicle> vOpt =vRepository.findById(id);
 		VehicleDto vToDelete = convertToDto(vOpt.get());
-		remotevehiculeService.deleteVehicleSimulation(vToDelete);
+
 		if (vOpt.isPresent()) {
+			 remotevehiculeService.deleteVehicleSimulation(vToDelete);
 			 vRepository.deleteById(id);
 		}
 		return null;

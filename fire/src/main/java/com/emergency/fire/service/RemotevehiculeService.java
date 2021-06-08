@@ -86,7 +86,9 @@ public class RemotevehiculeService {
 		restTemplate= new RestTemplate( );
 		HttpEntity<VehicleDto> requestUpdate = new HttpEntity<>(vdelete);
 		ResponseEntity<Boolean> reponse = restTemplate.exchange("http://localhost:8081/vehicle/"+vdelete.getId(), HttpMethod.DELETE, requestUpdate, Boolean.class);		
+		System.out.println(vdelete.getId());
 	}
+	
 
 	
 

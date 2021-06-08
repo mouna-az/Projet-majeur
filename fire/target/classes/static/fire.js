@@ -1,4 +1,3 @@
-
 //NOTREajax
 $(document).ready(function () {
 
@@ -20,6 +19,12 @@ function vehicadd_ajax_submit() {
     search["liquidType"] = $("#liquidType").val();
     search["liquidQuantity"] = $("#liquidQuantity").val();
     search["lliquidConsumption"] = $("#liquidConsumption").val();
+    search["fuel"] = "100.0" ;
+    search["fuelCompsumption"] = "1.0";
+    search["crewMenber"] = "8";
+    search ["crewMenberCapacity"] = "8";
+    search ["facilityRefID"] = "0" ; 
+
     $("#sign").prop("disabled", true);
     
     console.log(JSON.stringify(search))
@@ -261,7 +266,7 @@ function fetch_vehicle() {
     var vehic =L.marker([vehicle.lat, vehicle.lon],{icon: myicon}).addTo(mymap).bindPopup(content).on('click',function(e) {
        
         document.getElementById("id").value =vehicle.id
-        document.getElementById("long").value =vehicle.lon
+        document.getElementById("lon").value =vehicle.lon
         document.getElementById("lat").value =vehicle.lat
         document.getElementById("efficiency").value =vehicle.efficiency
         document.getElementById("liquidType").value =vehicle.liquidType
@@ -303,7 +308,7 @@ function removeall(){
 function deleteVehicle(){
    
     var id= document.getElementById("id").value;
-    var deleteUrl= "/deleteVehicule"+id; 
+    var deleteUrl= "/deleteVehicule/"+id; 
     let context = {
     method: 'DELETE'}
     fetch(deleteUrl,context);
@@ -317,8 +322,8 @@ function modifier(){
     for (vehicule of vehicleList){
         if (vehicule.id==id0){break}
     }
-    
-    vehicule.lon=document.getElementById("long").value 
+    vehicule.type=document.getElementById("type").value
+    vehicule.lon=document.getElementById("lon").value 
     vehicule.lat=document.getElementById("lat").value 
     vehicule.efficiency=document.getElementById("efficiency").value 
     vehicule.liquidType=document.getElementById("liquidType").value 
@@ -347,7 +352,7 @@ function modifier(){
 function add(){
     
     
-    var lon=document.getElementById("long").value
+    var lon=document.getElementById("lon").value
     var lat=document.getElementById("lat").value
     var ty=document.getElementById("type").value
     var addvehcle= "http://127.0.0.1:8081/vehicle"; 
@@ -455,5 +460,3 @@ function deplacement(lat,lon){
     fetch(confVeh,context);
    
 }
-
-
