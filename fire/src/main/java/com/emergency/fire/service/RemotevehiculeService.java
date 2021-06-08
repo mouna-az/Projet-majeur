@@ -55,6 +55,22 @@ public class RemotevehiculeService {
 		return listVehicle ;
 	}
 	
+	public List<Vehicle> getAllVehicle() {
+		Iterable<Vehicle> list = vRepo.findAll();
+		List<Vehicle> listVehicle = new ArrayList<Vehicle>();
+		if (list == null) {
+			return null;
+		}
+		else {
+			for(Vehicle v:list) {
+				listVehicle.add(v);
+			}
+		}
+		
+		return listVehicle ;
+
+	}
+	
 	public List<FireDto> getlallfireList () { 
 		FireDto[] list = getAllFireJson();
 		List<FireDto> fireList = new ArrayList<FireDto>();
@@ -89,8 +105,7 @@ public class RemotevehiculeService {
 		restTemplate= new RestTemplate( );
 		HttpEntity<VehicleDto> requestUpdate = new HttpEntity<>(vdelete);
 		ResponseEntity<Boolean> reponse = restTemplate.exchange("http://localhost:8081/vehicle/"+vdelete.getId(), HttpMethod.DELETE, requestUpdate, Boolean.class);		
-		System.out.println(vdelete.getId());
-		System.out.println("delete dans le serveur 2");
+		System.out.println(reponse + " : " + vdelete.getId() + "delete dans le serveur");
 		}
 	
 

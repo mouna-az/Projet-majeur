@@ -1,63 +1,3 @@
-//NOTREajax
-$(document).ready(function () {
-
-    $("#search-form").submit(function (event) {
-        //stop submit the form, we will post it manually.
-        event.preventDefault();
-        vehicadd_ajax_submit() ;
-    });
-
-});
-//ajouter
-function vehicadd_ajax_submit() {	
-    console.log("Je suis dans la fonction")
-    var search = {}
-    search["lon"] = $("#lon").val();
-	search["lat"] = $("#lat").val();
-	search["type"] = $("#type").val();
-    search["efficiency"] = $("#efficiency").val();
-    search["liquidType"] = $("#liquidType").val();
-    search["liquidQuantity"] = $("#liquidQuantity").val();
-    search["lliquidConsumption"] = $("#liquidConsumption").val();
-    search["fuel"] = "100.0" ;
-    search["fuelCompsumption"] = "1.0";
-    search["crewMenber"] = "8";
-    search ["crewMenberCapacity"] = "8";
-    search ["facilityRefID"] = "0" ; 
-
-    $("#sign").prop("disabled", true);
-    
-    console.log(JSON.stringify(search))
-    
-    $.ajax({
-        type: "POST",
-        contentType: "application/json",
-        url: "/vehicle/add",
-        data: JSON.stringify(search),
-        dataType: 'json',
-        cache: false,
-        success: function (data) {
-            console.log("SUCCESS : ", data);
-            $("#sign").prop("disabled", false);
-        },
-    });
-
-    var addvehcle= "/vehicle/add"; 
-    let context = {
-        headers: {
-            
-            'Content-Type': 'application/json'
-          },
-    method: 'POST',
-    body: JSON.stringify(JSON.stringify(search))
-    
-
-    }
-    fetch(addvehcle,context);
-    refresh()
-
-}
-
 var vehicleList=[]
 var vehiclShow=[]
 
@@ -82,7 +22,6 @@ function fetch_fire() {
     for(var i = 0; i < reponse.length; i++) {
     fireList[i] = reponse[i]; 
     }
-    filtre()
     create_fire();
    }
    
@@ -102,16 +41,11 @@ function fetch_fire() {
     fillOpacity: fire.intesity/10,
     radius: fire.range
     } 
-    ).addTo(mymap).bindPopup(content)
-       
-
+    ).addTo(mymap).bindPopup(content);
     firePrinted.push(circle);
  
 
 
-
-   }
-   function remplir(){
 
    }
    
@@ -131,7 +65,7 @@ function fetch_fire() {
     firePrinted = [];
     /// call your function here
     fetch_fire();
-   }, 5000);
+   }, 10000);
    
    fetch_fire();
 
@@ -139,13 +73,12 @@ function fetch_fire() {
 var popup = L.popup();
 
 function onMapClick(e) {
-    if (document.getElementById("butDep").value=="deplacer"){
     popup
         .setLatLng(e.latlng)
         .setContent("You clicked the map at " + e.latlng.toString())
         .openOn(mymap);
-    console.log(e.latlng)}}
-
+    console.log(e.latlng)
+}
 
 mymap.on('click', onMapClick);
 
@@ -165,7 +98,7 @@ function filtre(){
     fireListShow=[];
     for (i of fireTypes){
         if (document.getElementById(i).checked){
-           
+            console.log(i)
             l.push(i)
             
         }
@@ -187,31 +120,47 @@ function filtre(){
     create_fire()
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //vehicule
 
 var popup = L.popup();
-function onMapClickDeplacer(e) {
-  
-  if (document.getElementById("butDep").value=="arreter"){
-    deplacement(e.latlng.lat,e.latlng.lng)
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(mymap);
+    console.log(e.latlng.lat)
+    deplacement(e.latlng.lat,e.latlng.lng,21425)
     fVeh()
-  }
-}
-function changer(){
-    if (document.getElementById("butDep").value=="deplacer"){
-        mymap.on('click', onMapClickDeplacer);
-    document.getElementById("butDep").value="arreter";
-
-    }
-    else{
-        document.getElementById("butDep").value="deplacer";
-        mymap.on('click', onMapClick);
-    }
+   
 }
 
-
+mymap.on('click', onMapClick);
 function fetch_vehicle() {
-    const GET_VEHICLE_URL="/allvehicule"; 
+    const GET_VEHICLE_URL="http://127.0.0.1:8081/vehicle"; 
     let context = {
     method: 'GET'
     };
@@ -219,8 +168,6 @@ function fetch_vehicle() {
     fetch(GET_VEHICLE_URL,context)
     .then(reponse => reponse.json().then(body => vehicleList_callback(body)))
     .catch(error => err_callback(error));
-  
-    
     
     }
     function err_callback(error){
@@ -231,14 +178,10 @@ function fetch_vehicle() {
 
 
     function vehicleList_callback(reponse) {
-        
-       
     vehicleList=[];
     for(var i = 0; i < reponse.length; i++) {
     vehicleList[i] = reponse[i]; 
     }
-   
-    fVeh();
     create_vehicle();
     }
     
@@ -260,23 +203,13 @@ function fetch_vehicle() {
 
     function print_vehicle(vehicle) {
     var content ="id :"+vehicle.id+"<br>type: "+vehicle.type+"<br>liquidType: "+vehicle.liquidType+"<br>liquidQuantity: "+vehicle.liquidQuantity+"<br>fuel: "+vehicle.fuel+"<br>crewMembers: "+vehicle.crewMember+"<br>crewMemberCapacity: "+vehicle.crewMemberCapacity+"<br> vehicule Position: ("+vehicle.lat+","+vehicle.lon+")"
-    const ids=["long","lat","efficiency","liquidType","liquidQuantity","liquidConsumption","id"]
+
     var myicon = L.icon({
         iconUrl: 'vehicule.png'});
-    var vehic =L.marker([vehicle.lat, vehicle.lon],{icon: myicon}).addTo(mymap).bindPopup(content).on('click',function(e) {
-       
-        document.getElementById("id").value =vehicle.id
-        document.getElementById("lon").value =vehicle.lon
-        document.getElementById("lat").value =vehicle.lat
-        document.getElementById("efficiency").value =vehicle.efficiency
-        document.getElementById("liquidType").value =vehicle.liquidType
-        document.getElementById("liquidConsumption").value =vehicle.liquidConsumption
-        document.getElementById("liquidQuantity").value =vehicle.liquidQuantity
-       
-    } );
+    var vehic =L.marker([vehicle.lat, vehicle.lon],{icon: myicon}).addTo(mymap).bindPopup(content);
     
 
-    L.imageOverlay(imageUrl, imageBounds).addTo(mymap).bindPopup(content)
+    L.imageOverlay(imageUrl, imageBounds).addTo(mymap).bindPopup(content) ;
     
         vehiclePrinted.push(vehic);
     
@@ -308,46 +241,55 @@ function removeall(){
 function deleteVehicle(){
    
     var id= document.getElementById("id").value;
-    var deleteUrl= "/deleteVehicule/"+id; 
+    var deleteUrl= "http://127.0.0.1:8081/vehicle/"+id; 
     let context = {
     method: 'DELETE'}
     fetch(deleteUrl,context);
-    refresh()
-        
+    
+    
 }
 
-function modifier(){
-    id0=document.getElementById("id");
-    for (vehicule of vehicleList){
-        if (vehicule.id==id0){break}
+function add(){
+    
+    var id= 325;
+    var lon=document.getElementById("long").value
+    var lat=document.getElementById("lat").value
+    var ty=document.getElementById("type").value
+    var eff=document.getElementById("efficiency").value
+    var liqT=document.getElementById("liquidType").value
+    var liqQ=document.getElementById("liquidQuantity").value
+    var liqC=document.getElementById("liquidConsumption").value
+    var addvehcle= "http://127.0.0.1:8081/vehicle"; 
+    var param = {
+        "id": 20328,
+        "lon": lon,
+        "lat": lat,
+        "type": ty,
+        "efficiency": eff,
+        "liquidType": liqT,
+        "liquidQuantity": liqQ,
+        "liquidConsumption": liqC,
+        "fuel": 100.0,
+        "fuelConsumption": 10.0,
+        "crewMember": 8,
+        "crewMemberCapacity": 8,
+        "facilityRefID": 0
     }
-    vehicule.type=document.getElementById("type").value
-    vehicule.lon=document.getElementById("lon").value 
-    vehicule.lat=document.getElementById("lat").value 
-    vehicule.efficiency=document.getElementById("efficiency").value 
-    vehicule.liquidType=document.getElementById("liquidType").value 
-    vehicule.liquidConsumption=document.getElementById("liquidConsumption").value 
-    vehicule.liquidQuantity=document.getElementById("liquidQuantity").value 
-    const confVeh="http://127.0.0.1:8081/vehicle/"+vehicule.id; 
-   
-   
-    let context = {
 
+    let context = {
         headers: {
             
             'Content-Type': 'application/json'
           },
-        method: 'PUT',
-        body:JSON.stringify(vehicule)
+    method: 'POST',
+    body: JSON.stringify(param)
+    
 
     }
-    fetch(confVeh,context);
-
-
-
+    fetch(addvehcle,context);
+    
+    
 }
-
-
 
 function fVeh(){
     removeall()
@@ -379,35 +321,31 @@ function fVeh(){
     }
     create_vehicle()
 }
-function resetfire(){
+function reset(){
     const resetfire="http://127.0.0.1:8081/fire/reset"; 
     let context = {
     method: 'GET'
     }
-    fetch(resetfire,context).then(fetch_fire)
-    
-}
-function refresh(){
-    fetch_vehicle()
-
-    
-    
+    fetch(resetfire,context)
 }
 
-function deplacement(lat,lon){
-    id0=document.getElementById("id").value;
-    for (vehic of vehicleList){
-        console.log(id0)
-        if (vehic.id==id0){break}
+
+function deplacement(lat,lon,id){
+    var vehic
+    for (i of vehicleList){
+        if (i.id==id){
+            vehic=i;
+            break
+        }
     }
-    
-    
-   
     vehic.lat=lat;
     vehic.lon=lon;
     const confVeh="http://127.0.0.1:8081/vehicle/"+vehic.id; 
    
-    
+    var param = {
+        
+        "lon": lon,
+        "lat": lat,}
     let context = {
 
         headers: {
@@ -416,8 +354,104 @@ function deplacement(lat,lon){
           },
         method: 'PUT',
         body:JSON.stringify(vehic)
-
     }
     fetch(confVeh,context);
+    console.log(vehic)
+
+
+}
+function modifier(){
+    
+
+}
+
+//ajax
+$(document).ready(function () {
+
+    $("#search-form").submit(function (event) {
+        //stop submit the form, we will post it manually.
+        event.preventDefault();
+        vehicadd_ajax_submit() ;
+        vehicdelete_ajax_submit();
+    });
+
+});
+
+function vehicadd_ajax_submit() {	
+    var search = {}
+    search["type"] = $("#type").val();
+    search["long"] = $("#long").val();
+	search["lat"] = $("#lat").val();
+    search["efficiency"] = $("#efficiency").val();
+    search["liquidType"] = $("#liquidType").val();
+    search["iquidQuantity"] = $("#iquidQuantity").val();
+    search["lliquidConsumption"] = $("#liquidConsumption").val();
+    $("#sign").prop("disabled", true);
+
+    $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/vehicle/add",
+        data: JSON.stringify(search),
+        dataType: 'json',
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+            var json = "<h4>Ajax Response</h4>&lt;pre&gt;"
+                + JSON.stringify(data, null, 4) + "&lt;/pre&gt;";
+            $('#feedback').html(json);
+
+            console.log("SUCCESS : ", data);
+            $("#sign").prop("disabled", false);
+
+        },
+        error: function (e) {
+
+            var json = "<h4>Ajax Response</h4>&lt;pre&gt;"
+                + e.responseText + "&lt;/pre&gt;";
+            $('#feedback').html(json);
+
+            console.log("ERROR : ", e);
+            $("#login").prop("disabled", false);
+
+        }
+    });
+
+}
+function vehicdelete_ajax_submit() {	
+    var search = {}
+    search["id"] = $("#id").val();
    
+
+    $("#sign").prop("disabled", true);
+
+    $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/vehicle/delete",
+        data: JSON.stringify(search),
+        dataType: 'json',
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+            var json = "<h4>Ajax Response</h4>&lt;pre&gt;"
+                + JSON.stringify(data, null, 4) + "&lt;/pre&gt;";
+            $('#feedback').html(json);
+
+            console.log("SUCCESS : ", data);
+            $("#sign").prop("disabled", false);
+
+        },
+        error: function (e) {
+
+            var json = "<h4>Ajax Response</h4>&lt;pre&gt;"
+                + e.responseText + "&lt;/pre&gt;";
+            $('#feedback').html(json);
+
+            console.log("ERROR : ", e);
+            $("#login").prop("disabled", false);
+
+        }
+    });
+
 }

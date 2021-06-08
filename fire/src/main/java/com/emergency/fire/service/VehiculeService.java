@@ -76,16 +76,15 @@ public class VehiculeService {
 	}
 	
 	//supprimer un véhicule de notre base de données
-		public Vehicle deleteVehicule(Integer remoteid) {
-			Optional<Vehicle> vOpt =vRepository.findByRemoteid(remoteid);
-			System.out.println("trouvée dans notre base with remote");
+		public Vehicle deleteVehicule(Integer id) {
+			Optional<Vehicle> vOpt =vRepository.findById(id);
+			System.out.println("trouvée dans notre base with id");
 			if (vOpt.isPresent()) {
 				VehicleDto vToDelete = convertToDto(vOpt.get());
-				System.out.println("voiture convertie" +vToDelete);
+				System.out.println("voiture convertie" + vToDelete);
 				 remotevehiculeService.deleteVehicleSimulation(vToDelete);
-					System.out.println("delete dans le serveur");
-				 vRepository.deleteByRemoteid(remoteid);
-					System.out.println("delete dans notre base");
+				 vRepository.deleteById(id);
+				 System.out.println("deleted dans notre base");
 
 			}
 			return null;
@@ -103,6 +102,7 @@ public class VehiculeService {
 	public void update() {
 		System.out.println(vRepository.findAll());
 	}
+	
 	
 	
 	public void stopDisplay() {
@@ -125,7 +125,7 @@ public class VehiculeService {
 		
 		//Creation of one vehicle per VehicleType
 		for (int i=0; i<types.size();i++) {
-			Vehicle v = new Vehicle( i+1, 0 , 25 , 25, types.get(i) , 10,
+			Vehicle v = new Vehicle( i+1, 0 , 4.857845, 45.750125, types.get(i) , 10,
 									com.project.model.dto.LiquidType.ALL , 100, 1,
 									100, 2, types.get(i).getVehicleCrewCapacity(), 
 									types.get(i).getVehicleCrewCapacity(), 1) ;

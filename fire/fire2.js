@@ -1,63 +1,3 @@
-//NOTREajax
-$(document).ready(function () {
-
-    $("#search-form").submit(function (event) {
-        //stop submit the form, we will post it manually.
-        event.preventDefault();
-        vehicadd_ajax_submit() ;
-    });
-
-});
-//ajouter
-function vehicadd_ajax_submit() {	
-    console.log("Je suis dans la fonction")
-    var search = {}
-    search["lon"] = $("#lon").val();
-	search["lat"] = $("#lat").val();
-	search["type"] = $("#type").val();
-    search["efficiency"] = $("#efficiency").val();
-    search["liquidType"] = $("#liquidType").val();
-    search["liquidQuantity"] = $("#liquidQuantity").val();
-    search["lliquidConsumption"] = $("#liquidConsumption").val();
-    search["fuel"] = "100.0" ;
-    search["fuelCompsumption"] = "1.0";
-    search["crewMenber"] = "8";
-    search ["crewMenberCapacity"] = "8";
-    search ["facilityRefID"] = "0" ; 
-
-    $("#sign").prop("disabled", true);
-    
-    console.log(JSON.stringify(search))
-    
-    $.ajax({
-        type: "POST",
-        contentType: "application/json",
-        url: "/vehicle/add",
-        data: JSON.stringify(search),
-        dataType: 'json',
-        cache: false,
-        success: function (data) {
-            console.log("SUCCESS : ", data);
-            $("#sign").prop("disabled", false);
-        },
-    });
-
-    var addvehcle= "/vehicle/add"; 
-    let context = {
-        headers: {
-            
-            'Content-Type': 'application/json'
-          },
-    method: 'POST',
-    body: JSON.stringify(JSON.stringify(search))
-    
-
-    }
-    fetch(addvehcle,context);
-    refresh()
-
-}
-
 var vehicleList=[]
 var vehiclShow=[]
 
@@ -78,11 +18,10 @@ function fetch_fire() {
    
    function fireList_callback(reponse) {
     fireList=[];
-    
+    filtre()
     for(var i = 0; i < reponse.length; i++) {
     fireList[i] = reponse[i]; 
     }
-    filtre()
     create_fire();
    }
    
@@ -139,13 +78,12 @@ function fetch_fire() {
 var popup = L.popup();
 
 function onMapClick(e) {
-    if (document.getElementById("butDep").value=="deplacer"){
     popup
         .setLatLng(e.latlng)
         .setContent("You clicked the map at " + e.latlng.toString())
         .openOn(mymap);
-    console.log(e.latlng)}}
-
+    console.log(e.latlng)
+}
 
 mymap.on('click', onMapClick);
 
@@ -165,7 +103,7 @@ function filtre(){
     fireListShow=[];
     for (i of fireTypes){
         if (document.getElementById(i).checked){
-           
+            console.log(i)
             l.push(i)
             
         }
@@ -187,31 +125,47 @@ function filtre(){
     create_fire()
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //vehicule
 
 var popup = L.popup();
-function onMapClickDeplacer(e) {
-  
-  if (document.getElementById("butDep").value=="arreter"){
-    deplacement(e.latlng.lat,e.latlng.lng)
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(mymap);
+    console.log(e.latlng.lat)
+    deplacement(e.latlng.lat,e.latlng.lng,vehicleList[0].id)
     fVeh()
-  }
-}
-function changer(){
-    if (document.getElementById("butDep").value=="deplacer"){
-        mymap.on('click', onMapClickDeplacer);
-    document.getElementById("butDep").value="arreter";
-
-    }
-    else{
-        document.getElementById("butDep").value="deplacer";
-        mymap.on('click', onMapClick);
-    }
+   
 }
 
-
+mymap.on('click', onMapClick);
 function fetch_vehicle() {
-    const GET_VEHICLE_URL="/allvehicule"; 
+    const GET_VEHICLE_URL="http://127.0.0.1:8081/vehicle"; 
     let context = {
     method: 'GET'
     };
@@ -219,7 +173,7 @@ function fetch_vehicle() {
     fetch(GET_VEHICLE_URL,context)
     .then(reponse => reponse.json().then(body => vehicleList_callback(body)))
     .catch(error => err_callback(error));
-  
+    console.log("fetche reponse :")
     
     
     }
@@ -232,12 +186,13 @@ function fetch_vehicle() {
 
     function vehicleList_callback(reponse) {
         
-       
+        console.log("callBack")
+        console.log(reponse)
     vehicleList=[];
     for(var i = 0; i < reponse.length; i++) {
     vehicleList[i] = reponse[i]; 
     }
-   
+    console.log(vehicleList)
     fVeh();
     create_vehicle();
     }
@@ -260,19 +215,12 @@ function fetch_vehicle() {
 
     function print_vehicle(vehicle) {
     var content ="id :"+vehicle.id+"<br>type: "+vehicle.type+"<br>liquidType: "+vehicle.liquidType+"<br>liquidQuantity: "+vehicle.liquidQuantity+"<br>fuel: "+vehicle.fuel+"<br>crewMembers: "+vehicle.crewMember+"<br>crewMemberCapacity: "+vehicle.crewMemberCapacity+"<br> vehicule Position: ("+vehicle.lat+","+vehicle.lon+")"
-    const ids=["long","lat","efficiency","liquidType","liquidQuantity","liquidConsumption","id"]
+
     var myicon = L.icon({
         iconUrl: 'vehicule.png'});
     var vehic =L.marker([vehicle.lat, vehicle.lon],{icon: myicon}).addTo(mymap).bindPopup(content).on('click',function(e) {
-       
         document.getElementById("id").value =vehicle.id
-        document.getElementById("lon").value =vehicle.lon
-        document.getElementById("lat").value =vehicle.lat
-        document.getElementById("efficiency").value =vehicle.efficiency
-        document.getElementById("liquidType").value =vehicle.liquidType
-        document.getElementById("liquidConsumption").value =vehicle.liquidConsumption
-        document.getElementById("liquidQuantity").value =vehicle.liquidQuantity
-       
+        console.log('done') ;
     } );
     
 
@@ -308,46 +256,53 @@ function removeall(){
 function deleteVehicle(){
    
     var id= document.getElementById("id").value;
-    var deleteUrl= "/deleteVehicule/"+id; 
+    var deleteUrl= "http://127.0.0.1:8081/vehicle/"+id; 
     let context = {
     method: 'DELETE'}
     fetch(deleteUrl,context);
     refresh()
-        
+    
+    
 }
 
-function modifier(){
-    id0=document.getElementById("id");
-    for (vehicule of vehicleList){
-        if (vehicule.id==id0){break}
+function add(){
+    
+    
+    var lon=document.getElementById("long").value
+    var lat=document.getElementById("lat").value
+    var ty=document.getElementById("type").value
+    var addvehcle= "http://127.0.0.1:8081/vehicle"; 
+    var param = {
+        "id": 20328,
+        "lon": lon,
+        "lat": lat,
+        "type": ty,
+        "efficiency": 10.0,
+        "liquidType": "WATER",
+        "liquidQuantity": 100.0,
+        "liquidConsumption": 1.0,
+        "fuel": 100.0,
+        "fuelConsumption": 10.0,
+        "crewMember": 8,
+        "crewMemberCapacity": 8,
+        "facilityRefID": 0
     }
-    vehicule.type=document.getElementById("type").value
-    vehicule.lon=document.getElementById("lon").value 
-    vehicule.lat=document.getElementById("lat").value 
-    vehicule.efficiency=document.getElementById("efficiency").value 
-    vehicule.liquidType=document.getElementById("liquidType").value 
-    vehicule.liquidConsumption=document.getElementById("liquidConsumption").value 
-    vehicule.liquidQuantity=document.getElementById("liquidQuantity").value 
-    const confVeh="http://127.0.0.1:8081/vehicle/"+vehicule.id; 
-   
-   
-    let context = {
 
+    let context = {
         headers: {
             
             'Content-Type': 'application/json'
           },
-        method: 'PUT',
-        body:JSON.stringify(vehicule)
+    method: 'POST',
+    body: JSON.stringify(param)
+    
 
     }
-    fetch(confVeh,context);
-
-
-
+    fetch(addvehcle,context);
+    refresh()
+    
+    
 }
-
-
 
 function fVeh(){
     removeall()
@@ -389,25 +344,27 @@ function resetfire(){
 }
 function refresh(){
     fetch_vehicle()
-
+    console.log(vehicleList)
     
     
 }
 
-function deplacement(lat,lon){
-    id0=document.getElementById("id").value;
-    for (vehic of vehicleList){
-        console.log(id0)
-        if (vehic.id==id0){break}
+function deplacement(lat,lon,id){
+    var vehic
+    for (i of vehicleList){
+        if (i.id==id){
+            vehic=i;
+            break
+        }
     }
-    
-    
-   
     vehic.lat=lat;
     vehic.lon=lon;
     const confVeh="http://127.0.0.1:8081/vehicle/"+vehic.id; 
    
-    
+    var param = {
+        
+        "lon": lon,
+        "lat": lat,}
     let context = {
 
         headers: {
@@ -419,5 +376,7 @@ function deplacement(lat,lon){
 
     }
     fetch(confVeh,context);
-   
+    console.log(vehic)
+
+
 }

@@ -307,8 +307,8 @@ function removeall(){
 }
 function deleteVehicle(){
    
-    var remoteid= document.getElementById("id").value;
-    var deleteUrl= "/deleteVehicule/"+remoteid; 
+    var id= document.getElementById("id").value;
+    var deleteUrl= "/deleteVehicule/"+id; 
     let context = {
     method: 'DELETE'}
     fetch(deleteUrl,context);

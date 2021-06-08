@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.project.model.dto.VehicleDto;
+import com.emergency.fire.model.Vehicle;
 import com.emergency.fire.service.EmergencyService;
 import com.emergency.fire.service.RemotevehiculeService;
 import com.project.model.dto.FireDto;
@@ -34,8 +35,8 @@ public class EmergencyRestCtr {
 		
 		//regarder les véhicules présents dans le simulateur format json
 		@RequestMapping("/allvehicule")  
-		public VehicleDto[] getvehicule() {
-			VehicleDto[] listvehicule = remotevehiculeService.getAllVehicleJson () ;
+		public List<Vehicle> getvehicule() {
+			List<Vehicle> listvehicule = remotevehiculeService.getAllVehicle() ;
 			System.out.println(listvehicule);
 			return listvehicule; 
 		}

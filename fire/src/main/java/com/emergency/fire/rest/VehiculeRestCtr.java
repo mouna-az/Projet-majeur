@@ -47,9 +47,9 @@ public class VehiculeRestCtr {
 		vService.stopDisplay();
 	}
 	
-	@RequestMapping(method=RequestMethod.DELETE,value="/deleteVehicule/{remoteid}")
-	public void deleteVehicule (@PathVariable String remoteid ) {
-		vService.deleteVehicule(Integer.valueOf(remoteid));
+	@RequestMapping(method=RequestMethod.DELETE,value="/deleteVehicule/{id}")
+	public void deleteVehicule (@PathVariable String id ) {
+		vService.deleteVehicule(Integer.valueOf(id));
 		System.out.println(" voiture suppprimée");
 
 	}
