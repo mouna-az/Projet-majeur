@@ -4,12 +4,14 @@ import java.util.Optional;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.emergency.fire.model.Vehicle;
 import com.emergency.fire.repository.VehiculeRepository;
 import com.project.model.dto.VehicleDto;
 
 @Service
+@Transactional
 public class VehiculeService {
 	
 	
@@ -57,13 +59,17 @@ public class VehiculeService {
 	}
 	
 	//supprimer un véhicule de notre base de données
-	public Vehicle deleteVehicule(Integer id) {
-		Optional<Vehicle> vOpt =vRepository.findById(id);
-		VehicleDto vToDelete = convertToDto(vOpt.get());
-
+	public Vehicle deleteVehicule(Integer remoteid) {
+		Optional<Vehicle> vOpt =vRepository.findByRemoteid(remoteid);
+		System.out.println("trouvée dans notre base with remote");
 		if (vOpt.isPresent()) {
+			VehicleDto vToDelete = convertToDto(vOpt.get());
+			System.out.println("voiture convertie" +vToDelete);
 			 remotevehiculeService.deleteVehicleSimulation(vToDelete);
-			 vRepository.deleteById(id);
+				System.out.println("delete dans le serveur");
+			 vRepository.deleteByRemoteid(remoteid);
+				System.out.println("delete dans notre base");
+
 		}
 		return null;
 		

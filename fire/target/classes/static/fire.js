@@ -211,7 +211,7 @@ function changer(){
 
 
 function fetch_vehicle() {
-    const GET_VEHICLE_URL="http://127.0.0.1:8081/vehicle"; 
+    const GET_VEHICLE_URL="/allvehicule"; 
     let context = {
     method: 'GET'
     };
@@ -307,14 +307,13 @@ function removeall(){
 }
 function deleteVehicle(){
    
-    var id= document.getElementById("id").value;
-    var deleteUrl= "/deleteVehicule/"+id; 
+    var remoteid= document.getElementById("id").value;
+    var deleteUrl= "/deleteVehicule/"+remoteid; 
     let context = {
     method: 'DELETE'}
     fetch(deleteUrl,context);
     refresh()
-    
-    
+        
 }
 
 function modifier(){
@@ -329,8 +328,6 @@ function modifier(){
     vehicule.liquidType=document.getElementById("liquidType").value 
     vehicule.liquidConsumption=document.getElementById("liquidConsumption").value 
     vehicule.liquidQuantity=document.getElementById("liquidQuantity").value 
-    
-
     const confVeh="http://127.0.0.1:8081/vehicle/"+vehicule.id; 
    
    
@@ -349,44 +346,8 @@ function modifier(){
 
 
 }
-function add(){
-    
-    
-    var lon=document.getElementById("lon").value
-    var lat=document.getElementById("lat").value
-    var ty=document.getElementById("type").value
-    var addvehcle= "http://127.0.0.1:8081/vehicle"; 
-    var param = {
-        "id": 20328,
-        "lon": lon,
-        "lat": lat,
-        "type": ty,
-        "efficiency": 10.0,
-        "liquidType": "WATER",
-        "liquidQuantity": 100.0,
-        "liquidConsumption": 1.0,
-        "fuel": 100.0,
-        "fuelConsumption": 10.0,
-        "crewMember": 8,
-        "crewMemberCapacity": 8,
-        "facilityRefID": 0
-    }
 
-    let context = {
-        headers: {
-            
-            'Content-Type': 'application/json'
-          },
-    method: 'POST',
-    body: JSON.stringify(param)
-    
 
-    }
-    fetch(addvehcle,context);
-    refresh()
-    
-    
-}
 
 function fVeh(){
     removeall()

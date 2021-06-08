@@ -25,7 +25,7 @@ public class VehiculeRestCtr {
 	@RequestMapping(method=RequestMethod.POST,value="/vehicle/add")
 	public void addvehicule(@RequestBody Vehicle v) {
 		vService.addVehicule(v);
-		System.out.print(" voiture crée");
+		System.out.println(" voiture crée");
 		
 	}
 	
@@ -45,9 +45,10 @@ public class VehiculeRestCtr {
 		vService.stopDisplay();
 	}
 	
-	@RequestMapping(method=RequestMethod.DELETE,value="/deleteVehicule/{id}")
-	public void deleteVehicule (@PathVariable String id ) {
-		vService.deleteVehicule(Integer.valueOf(id));
+	@RequestMapping(method=RequestMethod.DELETE,value="/deleteVehicule/{remoteid}")
+	public void deleteVehicule (@PathVariable String remoteid ) {
+		vService.deleteVehicule(Integer.valueOf(remoteid));
+		System.out.println(" voiture suppprimée");
 
 	}
 
