@@ -1,6 +1,13 @@
 com/emergency/fire/FireApplication.class
 com/emergency/fire/service/EmergencyService.class
+com/emergency/fire/model/FireDto.class
+com/emergency/fire/model/VehicleType.class
+com/emergency/fire/model/LiquidType.class
 com/emergency/fire/rest/VehiculeRestCtr.class
 com/emergency/fire/repository/VehiculeRepository.class
+com/emergency/fire/model/FireType.class
+com/emergency/fire/model/Coord.class
 com/emergency/fire/rest/EmergencyRestCtr.class
 com/emergency/fire/service/VehiculeService.class
+com/emergency/fire/model/Vehicule.class
+com/emergency/fire/model/VehicleDto.class

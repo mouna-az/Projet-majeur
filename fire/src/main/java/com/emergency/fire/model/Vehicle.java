@@ -30,6 +30,9 @@ public class Vehicle {
 	private int crewMember;
 	private int crewMemberCapacity;
 	private Integer facilityRefID;
+	private boolean dispo = true;
+	private int fireAssigned;
+	private int coordNow;
 	
 	public Vehicle() {
 		crewMember= CREW_MEMBER_START_VALUE;
@@ -168,5 +171,29 @@ public class Vehicle {
 		this.remoteid = remoteid;
 	}
 
+	public boolean isDispo() {
+		return dispo;
+	}
+
+	public void setDispo(boolean dispo) {
+		this.dispo = dispo;
+	}
+
+	public int getFireAssigned() {
+		return fireAssigned;
+	}
+
+	public void setFireAssigned(int fireAssigned) {
+		this.fireAssigned = fireAssigned;
+	}
+
+	public int getCoordNow() {
+		return coordNow;
+	}
+
+	public void setCoordNow(int coordNow) {
+		this.coordNow = coordNow;
+	}
+	
 
 }

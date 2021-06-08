@@ -11,6 +11,8 @@ import org.springframework.web.client.RestTemplate;
 import com.emergency.fire.model.Vehicle;
 import com.emergency.fire.service.RemotevehiculeService;
 import com.emergency.fire.service.VehiculeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.project.model.dto.FireDto;
 
 @RestController
@@ -25,7 +27,7 @@ public class VehiculeRestCtr {
 	@RequestMapping(method=RequestMethod.POST,value="/vehicle/add")
 	public void addvehicule(@RequestBody Vehicle v) {
 		vService.addVehicule(v);
-		System.out.println(" voiture crée");
+		System.out.print("Voiture " + v.getId() + " créée");
 		
 	}
 	
@@ -36,8 +38,8 @@ public class VehiculeRestCtr {
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT,value="/vehicle/{id}")
-	public void putvehicule(@RequestBody Vehicle v,@PathVariable String id) {
-		vService.putVehicule(v,id);
+	public void putvehicule(@RequestBody Vehicle v,@PathVariable String id) throws JsonMappingException, JsonProcessingException {
+		vService.putVehicule(v);
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value="/stopdisplay")
@@ -51,7 +53,5 @@ public class VehiculeRestCtr {
 		System.out.println(" voiture suppprimée");
 
 	}
-
-
-
+	
 }

@@ -11,13 +11,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.emergency.fire.model.Vehicle;
+import com.emergency.fire.repository.VehiculeRepository;
 import com.project.model.dto.FireDto;
 import com.project.model.dto.VehicleDto;
 
 @Service
 public class RemotevehiculeService {
-	RestTemplate restTemplate ;
 	
+	@Autowired
+	VehiculeRepository vRepo;
+	
+	RestTemplate restTemplate ;
 	
 	//récupérer les véhicule du simulateur en json
 	public VehicleDto[] getAllVehicleJson () {
@@ -65,31 +69,29 @@ public class RemotevehiculeService {
 		System.out.println(fireList); 
 		return fireList;
 	}
-	
-	
 	//ajout d'un véhicule à la simulation
 	public void addsimulation(Vehicle v) {
 		restTemplate= new RestTemplate();
 		Vehicle v1 = restTemplate.postForObject("http://localhost:8081/vehicle", v, Vehicle.class);
 		v.setRemoteid(v1.getId());
-
+		vRepo.save(v);
 	}
 	
-	public void updatesimulation(VehicleDto v) {
+	public ResponseEntity<Boolean> updatesimulation(VehicleDto v) {
 		restTemplate= new RestTemplate();
 		HttpEntity<VehicleDto> requestUpdate = new HttpEntity<>(v);
 		ResponseEntity<Boolean> reponse = restTemplate.exchange("http://localhost:8081/vehicle/"+v.getId(), HttpMethod.PUT, requestUpdate, Boolean.class);
 		System.out.println(v.getId());
+		return reponse;
 	}
-
+	
 	public void deleteVehicleSimulation(VehicleDto vdelete) {
 		restTemplate= new RestTemplate( );
 		HttpEntity<VehicleDto> requestUpdate = new HttpEntity<>(vdelete);
 		ResponseEntity<Boolean> reponse = restTemplate.exchange("http://localhost:8081/vehicle/"+vdelete.getId(), HttpMethod.DELETE, requestUpdate, Boolean.class);		
 		System.out.println(vdelete.getId());
-	}
-	
-
+		System.out.println("delete dans le serveur 2");
+		}
 	
 
 }
