@@ -321,6 +321,7 @@ function modifier(){
     for (vehicule of vehicleList){
         if (vehicule.id==id0){break}
     }
+    var id =document.getElementById("id").value
     vehicule.type=document.getElementById("type").value
     vehicule.lon=document.getElementById("lon").value 
     vehicule.lat=document.getElementById("lat").value 
@@ -328,7 +329,7 @@ function modifier(){
     vehicule.liquidType=document.getElementById("liquidType").value 
     vehicule.liquidConsumption=document.getElementById("liquidConsumption").value 
     vehicule.liquidQuantity=document.getElementById("liquidQuantity").value 
-    const confVeh="http://127.0.0.1:8081/vehicle/"+vehicule.id; 
+    var url="/vehicle/"+id; 
    
    
     let context = {
@@ -341,9 +342,8 @@ function modifier(){
         body:JSON.stringify(vehicule)
 
     }
-    fetch(confVeh,context);
-
-
+    fetch(url,context);
+    refresh()
 
 }
 
