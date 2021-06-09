@@ -85,10 +85,10 @@ public class RemotevehiculeService {
 		System.out.println(fireList); 
 		return fireList;
 	}
+	
 	//ajout d'un véhicule à la simulation
 	public void addsimulation(Vehicle v) {
 		restTemplate= new RestTemplate();
-		
 		Vehicle v1 = restTemplate.postForObject("http://localhost:8081/vehicle", v, Vehicle.class);
 		v.setRemoteid(v1.getId());
 		vRepo.save(v);
@@ -98,7 +98,7 @@ public class RemotevehiculeService {
 		restTemplate= new RestTemplate();
 		HttpEntity<VehicleDto> requestUpdate = new HttpEntity<>(v);
 		ResponseEntity<Boolean> reponse = restTemplate.exchange("http://localhost:8081/vehicle/"+v.getId(), HttpMethod.PUT, requestUpdate, Boolean.class);
-		System.out.println("le vehicle est modifié"+ v.getId());
+		System.out.println(v.getId());
 		return reponse;
 	}
 	
@@ -108,6 +108,12 @@ public class RemotevehiculeService {
 		ResponseEntity<Boolean> reponse = restTemplate.exchange("http://localhost:8081/vehicle/"+vdelete.getId(), HttpMethod.DELETE, requestUpdate, Boolean.class);		
 		System.out.println(reponse + " : " + vdelete.getId() + "delete dans le serveur");
 		}
+
+	public void resetFire() {
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getForObject("http://localhost:8081/fire/reset",void.class);	
+		System.out.println("Fire reset");
+	}
 	
 
 }

@@ -1,3 +1,130 @@
+
+//animation 
+
+
+
+L.AnimatedMarker = L.Marker.extend({
+    options: {
+    // meters
+    distance: 2000,
+    // ms
+    interval: 100,
+    // animate on add?
+    autoStart: true,
+    // callback onend
+    onEnd: function(){},
+    clickable: false
+    },
+    
+    initialize: function (latlngs, options) {
+    this.setLine(latlngs);
+    L.Marker.prototype.initialize.call(this, latlngs[0], options);
+    },
+    
+    // Breaks the line up into tiny chunks (see options) ONLY if CSS3 animations
+    // are not supported.
+    _chunk: function(latlngs) {
+    var i,
+    len = latlngs.length,
+    chunkedLatLngs = [];
+    
+    for (i=1;i<len;i++) {
+    var cur = latlngs[i-1],
+    next = latlngs[i],
+    dist = cur.distanceTo(next),
+    factor = this.options.distance / dist,
+    dLat = factor * (next.lat - cur.lat),
+    dLng = factor * (next.lng - cur.lng);
+    
+    if (dist > this.options.distance) {
+    while (dist > this.options.distance) {
+    cur = new L.LatLng(cur.lat + dLat, cur.lng + dLng);
+    dist = cur.distanceTo(next);
+    chunkedLatLngs.push(cur);
+    }
+    } else {
+    chunkedLatLngs.push(cur);
+    }
+    }
+    chunkedLatLngs.push(latlngs[len-1]);
+    
+    return chunkedLatLngs;
+    },
+    
+    onAdd: function (mymap) {
+    L.Marker.prototype.onAdd.call(this, mymap);
+    
+    // Start animating when added to the map
+    if (this.options.autoStart) {
+    this.start();
+    }
+    },
+    
+    animate: function() {
+    var self = this,
+    len = this._latlngs.length,
+    speed = this.options.interval;
+    
+    // Normalize the transition speed from vertex to vertex
+    if (this._i < len && this.i > 0) {
+    speed = this._latlngs[this._i-1].distanceTo(this._latlngs[this._i]) / this.options.distance * this.options.interval;
+    }
+    
+    // Only if CSS3 transitions are supported
+    if (L.DomUtil.TRANSITION) {
+    if (this._icon) { this._icon.style[L.DomUtil.TRANSITION] = ('all ' + speed + 'ms linear'); }
+    }
+    
+    // Move to the next vertex
+    this.setLatLng(this._latlngs[this._i]);
+    this._i++;
+    
+    // Queue up the animation to the next next vertex
+    this._tid = setTimeout(function(){
+    if (self._i === len) {
+    self.options.onEnd.apply(self, Array.prototype.slice.call(arguments));
+    } else {
+    self.animate();
+    }
+    }, speed);
+    },
+    
+    // Start the animation
+    start: function() {
+    this.animate();
+    },
+    
+    // Stop the animation in place
+    stop: function() {
+    if (this._tid) {
+    clearTimeout(this._tid);
+    }
+    },
+    
+    setLine: function(latlngs){
+    if (L.DomUtil.TRANSITION) {
+    // No need to to check up the line if we can animate using CSS3
+    this._latlngs = latlngs;
+    } else {
+    // Chunk up the lines into options.distance bits
+    this._latlngs = this._chunk(latlngs);
+    this.options.distance = 10;
+    this.options.interval = 30;
+    }
+    this._i = 0;
+    }
+    
+    });
+    
+    L.animatedMarker = function (latlngs, options) {
+    return new L.AnimatedMarker(latlngs, options);
+    };
+   
+   
+   
+
+
+
 //NOTREajax
 $(document).ready(function () {
 
@@ -21,8 +148,8 @@ function vehicadd_ajax_submit() {
     search["lliquidConsumption"] = $("#liquidConsumption").val();
     search["fuel"] = "100.0" ;
     search["fuelCompsumption"] = "1.0";
-    search["crewMenber"] = "8";
-    search ["crewMenberCapacity"] = "8";
+    search["crewMenber"] = "2";
+    search ["crewMenberCapacity"] = "2"; //faire type==car * 2 + ....
     search ["facilityRefID"] = "0" ; 
 
     $("#sign").prop("disabled", true);
@@ -42,7 +169,7 @@ function vehicadd_ajax_submit() {
         },
     });
 
-    var addvehcle= "/vehicle/add"; 
+    var url= "/vehicle/add"; 
     let context = {
         headers: {
             
@@ -53,16 +180,15 @@ function vehicadd_ajax_submit() {
     
 
     }
-    fetch(addvehcle,context);
-    refresh()
+    fetch(url,context).then(fetch_vehicle);
 
 }
 
-var vehicleList=[]
-var vehiclShow=[]
+var vehicleList=[] 
+var vehiclShow=[] //à  afficher
 
 function fetch_fire() {
-    const GET_FIRE_URL="http://127.0.0.1:8081/fire"; 
+    const GET_FIRE_URL="/allfire"; 
     let context = {
     method: 'GET'
     };
@@ -72,19 +198,19 @@ function fetch_fire() {
     .catch(error => err_callback(error));
    }
    
-   function err_callback(error){
-    console.log(error);
-   }
+function err_callback(error){
+   console.log(error);
+}
    
-   function fireList_callback(reponse) {
+function fireList_callback(reponse) {
     fireList=[];
     
     for(var i = 0; i < reponse.length; i++) {
-    fireList[i] = reponse[i]; 
+    	fireList[i] = reponse[i]; 
     }
     filtre()
     create_fire();
-   }
+}
    
    function create_fire() {
     for(const fire of fireListShow){
@@ -94,7 +220,7 @@ function fetch_fire() {
    }
    
    function print_fire(fire) {
-    var content="intensitÃ© :"+fire.intensity+ " type :" +fire.type +" range :"+ fire.range;
+    var content="intensite :"+fire.intensity+ " type :" +fire.type +" range :"+ fire.range;
     var circle = L.circle([fire.lat, fire.lon],
     {
     color: 'red',
@@ -111,8 +237,9 @@ function fetch_fire() {
 
 
    }
-   function remplir(){
 
+   function remplir(){
+		//à réfléchir
    }
    
    // --- CODE ---
@@ -158,7 +285,8 @@ function removeallfire(){
 }
 
 function filtre(){
-    removeallfire();
+    
+	removeallfire();
     
     var fireTypes=["ALLf","E_Electric","B_Gasoline","D_Metals","A","B_Plastics"];
     var l=[];
@@ -295,7 +423,7 @@ function fetch_vehicle() {
     
     /// call your function here
     fetch_vehicle();
-    }, 10000);
+    }, 1000);
    
     fetch_vehicle();
 
@@ -311,17 +439,17 @@ function deleteVehicle(){
     var deleteUrl= "/deleteVehicule/"+id; 
     let context = {
     method: 'DELETE'}
-    fetch(deleteUrl,context);
-    refresh()
+    fetch(deleteUrl,context).then(fetch_vehicle);
         
 }
 
 function modifier(){
-    id0=document.getElementById("id");
+    id0=document.getElementById("id").value;
     for (vehicule of vehicleList){
         if (vehicule.id==id0){break}
     }
-    var id =document.getElementById("id").value
+     var id =document.getElementById("id").value
+	
     vehicule.type=document.getElementById("type").value
     vehicule.lon=document.getElementById("lon").value 
     vehicule.lat=document.getElementById("lat").value 
@@ -329,8 +457,7 @@ function modifier(){
     vehicule.liquidType=document.getElementById("liquidType").value 
     vehicule.liquidConsumption=document.getElementById("liquidConsumption").value 
     vehicule.liquidQuantity=document.getElementById("liquidQuantity").value 
-    var url="/vehicle/"+id; 
-   
+     var url="/vehicle/"+id;    
    
     let context = {
 
@@ -342,8 +469,12 @@ function modifier(){
         body:JSON.stringify(vehicule)
 
     }
-    fetch(url,context);
+console.log(JSON.stringify(vehicule))
+
+
+ 	fetch(url,context);
     refresh()
+
 
 }
 
@@ -380,19 +511,14 @@ function fVeh(){
     create_vehicle()
 }
 function resetfire(){
-    const resetfire="http://127.0.0.1:8081/fire/reset"; 
+    const resetfire="/fire/reset"; 
     let context = {
     method: 'GET'
     }
     fetch(resetfire,context).then(fetch_fire)
     
 }
-function refresh(){
-    fetch_vehicle()
 
-    
-    
-}
 
 function deplacement(lat,lon){
     id0=document.getElementById("id").value;
@@ -401,11 +527,11 @@ function deplacement(lat,lon){
         if (vehic.id==id0){break}
     }
     
-    
+       
    
     vehic.lat=lat;
     vehic.lon=lon;
-    const confVeh="http://127.0.0.1:8081/vehicle/"+vehic.id; 
+    const confVeh="/vehicle/"+vehic.id; 
    
     
     let context = {
@@ -418,6 +544,7 @@ function deplacement(lat,lon){
         body:JSON.stringify(vehic)
 
     }
-    fetch(confVeh,context);
+	console.log(JSON.stringify(vehic))
+    fetch(confVeh,context).then(fetch_vehicle);
    
 }

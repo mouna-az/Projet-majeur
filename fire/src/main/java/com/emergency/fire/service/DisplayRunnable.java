@@ -38,6 +38,7 @@ public class DisplayRunnable implements Runnable {
 					}
 				}
 				
+				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {

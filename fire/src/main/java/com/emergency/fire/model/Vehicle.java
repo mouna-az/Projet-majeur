@@ -6,7 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import com.project.model.dto.LiquidType;
-import com.project.model.dto.VehicleDto;
 import com.project.model.dto.VehicleType;
 
 //https://www.amitph.com/spring-entity-to-dto/
@@ -31,8 +30,8 @@ public class Vehicle {
 	private int crewMemberCapacity;
 	private Integer facilityRefID;
 	private boolean dispo = true;
-	private int fireAssigned;
-	private int coordNow;
+	private int fireAssigned = 0;
+	private int coordNow = 0;
 	
 	public Vehicle() {
 		crewMember= CREW_MEMBER_START_VALUE;
